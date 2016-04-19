@@ -20,11 +20,6 @@ class Main extends PluginBase implements Listener{
   }
   public function onLoad(){
     }
-	public function onPlayerCmd(PlayerCommandPreprocessEvent $ev) {
-	    $message = $ev->getMessage();
-		if($cfg->get("$message") ==! null) {
-		}
-	}
   public function onCommand(CommandSender $sender, Command $command, $label, array $args){
     switch($command->getName()){
 		case "function":
@@ -33,20 +28,15 @@ class Main extends PluginBase implements Listener{
 				case "c":
 				case "create":
 				if(count($args) < 2) {
-					$sender->sendMessage("Usage: /function <create> <function>");
+					return false;
 				} else {
 					 $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-					  $default = ["Default" => "op",
-					  "Command1" => "tell {sender} This is default command, modify it with /function setc <function> <Command number> <command...>",
-					"Command2" => "nothink",
-					"Command3" => "nothink",
-					"Command4" => "nothink",
-					"Command5" => "nothink"];
+					  $default = ["op", "tell {sender} This is default command, modify it with /function setc <function> <Command number> <command...>","nothink", "nothink", "nothink", "nothink"];
 					  $cfg->set($args[1], $default);
                       $cfg->save();
 					  $sender->sendMessage("§4§l[Functions] Function " . $args[1] . " has been created! You can edit it on the config or by doing /function sc <function> <command number> <command...>.");
 			    }
-					 return false;
+					 return true;
 					 break;
 				case "setcmd":
 				  $sender->sendMessage("§4§l[Functions] Use /function sc <function> <command number> <command>! It's more speedy but your way work too");
@@ -66,14 +56,14 @@ class Main extends PluginBase implements Listener{
 				#} else {
 				#	$sender->sendMessage("§4§l[Functions] Function " . $args[1] . " not found. Create it with /function c " . $args[1]);
 				#}
-					 return false;
+					 return true;
 					 break;
 				case "rc":
 				case "removecmd":
-				$cfg = new Config($this->getDataFolder() . "config.yaml", Config::YAML);
-				$func = $cfg->get($args[1]);
-				$oldcmd = $func[$args[0]+1]
-				 unset($func[$args[0]+1])
+				     $cfg = new Config($this->getDataFolder() . "config.yaml", Config::YAML);
+					 $func = $cfg->get($args[1]);
+					 $oldcmd = $func[$args[0]+1];
+					 unset($func[$args[0]+1]);
 				     $sender->sendMessage("§4§l[Functions] Removed command (" . $oldcmd . ") of function " . $args[1]);
 					 return true;
 					 break;
@@ -85,88 +75,80 @@ class Main extends PluginBase implements Listener{
 					 $func = $cfg->get($funcname);
 					 $default = $func[0];
 					 unset($func[0]);
-					 foreach($func as $funccmds)
+					 foreach($func as $funccmds) {
 						 array_push($cmdname, $i);
 						 $sender->sendMessage("Command " . $i . ": /" . $funccmds);
-						 $i = $i + 1
+						 $i = $i + 1;
 				      }
 					  $sender->sendMessage("Default: " . $default);
 					 return true;
 					 break;
-			    Default:
-				    $sender->sendMessage("§4§l[Functions] Help for Function: \n- /function create <function>:§6 Create a function \n- /function sc <function> <command id> <command>:§6 Modify a command a function \n- /function rc <function> <command id> <command>:§6 Remove a command from a function");
-					return true;
-					break;
+			   default:
+				      $sender->sendMessage("§4§l[Functions] Help for Function: \n- /function create <function>:§6 Create a function \n- /function sc <function> <command id> <command>:§6 Modify a command a function \n- /function rc <function> <command id> <command>:§6 Remove a command from a function");
+					  return true;
+					  break;
 			}
 			} else {
 				$sender->sendMessage("§4§l[Functions] Help for Function: \n- /function create <function>:§6 Create a function \n- /function sc <function> <command id> <command>:§6 Modify a command a function \n- /function rc <function> <command id> <command>:§6 Remove a command from a function");
 			}
 			return true;
 			break;
-		case "run":
-		    $cfg = new Config($this->getDataFolder() . "config.propreties", Config::PROPERTIES);
-		    if($cfg->get($args[0] . "Default") == null){
-				$sender->sendMessage("§4§l[Functions] Function not found");
+  }
+  }
+  public function onCommandPreProcess(PlayerCommandPreprocessEvent $event) {
+		    $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+			$args = $event->getMessage();
+			$sender = $event->getPlayer();
+			$cmds = explode(" ", $args);
+			$args = explode("/", $args[0]);
+			$cmds = $cfg->get($args[0]);
+		    if($cmds[0] ===! "op" or !$cmds[0] ===! "perm" or $cmds[0] ===! "true" or $cmds[0] ===! "console"){
 			} else {
+				$event->setCancelled();
 				$funcname = $args[0];
-				$id = 1;
-				$cmdid = 1;
-				switch($cfg->get($funcname . "Default")) {
+				switch($cmds[0]) {
 					case "op":
 					    if($sender->isOp()) {
-							$i = 1;
-					     while($i <= 8) {
-						 $cmd = [$funcname, "Command", $i];
-						 if ($cfg->get(implode("", $cmd) == "nothink") {
-							 $sender->sendPopup("§§");
-						 } else {
-						 $this->getServer()->dispatchCommand($sender, implode("", $cmd));
-						 }
-					     $i++;
+							unset($cmds[0]);
+							foreach($cmds as $cmd) {
+						          if ($cmd === "nothink") {
+								  } else {
+									  $this->getServer()->dispatchCommand($sender, $cmd);
+								  }
 				           }
 						} else {
 								$sender->sendMessage("§4You must be OP to use this command");
 						}
+						return true;
+						break;
 					case "perm":
 					    if($sender->hasPermission("func.use.func")) {
-							$i = 1;
-					         $function = $cfg->get($args[0]);
-					     while($i <= 8) {
-						 $cmd = [$funcname, "Command", $i];
-						 if ($cfg->get(implode("", $cmd) == "nothink") {
-							 $sender->sendMessage(" ");
-						 } else {
-						 $this->getServer()->dispatchCommand($sender, implode("", $cmd));
-						 }
-					     $i++;
+							unset($cmds[0]);
+							foreach($cmds as $cmd) {
+						          if ($cmd === "nothink") {
+								  } else {
+									  $this->getServer()->dispatchCommand($sender, implode("", $cmd));
+								  }
 				           }
 						} else {
 								$sender->sendMessage("§4You don't have the permission to use this command");
 						}
 					case "true":
-							$i = 1;
-					         $function = $cfg->get($args[0]);
-					     while($i <= 8) {
-						 $cmd = [$funcname, "Command", $i];
-						 if ($cfg->get(implode("", $cmd) == "nothink") {
-							 $sender->sendMessage(" ");
-						 } else {
-						 $this->getServer()->dispatchCommand($sender, implode("", $cmd));
-						 }
-					     $i++;
+							unset($cmds[0]);
+							foreach($cmds as $cmd) {
+						          if ($cmd === "nothink") {
+								  } else {
+									  $this->getServer()->dispatchCommand($sender, implode("", $cmd));
+								  }
 				           }
 					case "console":
 					    if(!$sender instanceof Player) {
-							$i = 1;
-					         $function = $cfg->get($args[0]);
-					     while($i <= 8) {
-						 $cmd = [$funcname, "Command", $i];
-						 if ($cfg->get(implode("", $cmd) == "nothink") {
-							 $sender->sendMessage(" ");
-						 } else {
-						 $this->getServer()->dispatchCommand($sender, implode("", $cmd));
-						 }
-					     $i++;
+							unset($cmds[0]);
+							foreach($cmds as $cmd) {
+						          if ($cmd === "nothink") {
+								  } else {
+									  $this->getServer()->dispatchCommand($sender, implode("", $cmd));
+								  }
 				           }
 						} else {
 								$sender->sendMessage("§4You must run this in console");
@@ -174,25 +156,19 @@ class Main extends PluginBase implements Listener{
 					default:
 					     $sender->sendMessage("§4§l[Functions] Default value not recognized. Changed to op.");
 						 $cmds = $cfg->get($args[0]);
-						 $cmds["default"] = "op";
+						 $cmds[0] = "op";
 						 $cfg->set($args[0], $cmds);
 					     $cfg->save();
-                         $funccmd = explode(" ", implode(" ", $cfg->get($funcname)));
 					     if($sender->isOp()) {
-							$i = 1;
-					         $function = $cfg->get($args[0]);
-					     while($i <= 8) {
-						 $cmd = [$funcname, "Command", $i];
-						 if ($cfg->get(implode("", $cmd) == "nothink") {
-							 $sender->sendMessage(" ");
-						 } else {
-						 $this->getServer()->dispatchCommand($sender, implode("", $cmd));
-						 }
-					     $i++;
+							unset($cmds[0]);
+							foreach($cmds as $cmd) {
+						          if ($cmd === "nothink") {
+								  } else {
+									  $this->getServer()->dispatchCommand($sender, implode("", $cmd));
+								  }
 				           }
 						}
 				}
 			}
 	}
   }
-}
