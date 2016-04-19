@@ -1,0 +1,27 @@
+---
+name: Functions
+author: Ad5001
+version: "1.0"
+api:
+- 1.13.0
+main: Ad5001\Functions\Main
+commands: 
+  function:
+     description: "Create, manage and remove functions with this command"
+     usage: "/function <sub-command> <function> parameters..."
+     permission: func.command.function
+  run:
+     description: "Run functions"
+     usage: "/run <function>"
+     permission: func.command.run
+permissions:
+   func.command.function:
+     default: op
+     description: "Create, manage and remove functions with this command"
+   func.use.func:
+     default: op
+     description: "Give the player the permission to use function in default: perm"
+   func.command.run:
+     default: op
+     description: "Run commands"
+...
