@@ -35,7 +35,7 @@ class Main extends PluginBase implements Listener{
 					  $cfg->set("/".$args[1], $default);
                       $cfg->save();
 					  $this->reloadConfig();
-					  $sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " has been created! You can edit it on the config or by doing /function sc <function> <command number> <command...>.");
+					  $sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " has been created! You can edit it on the config or by doing /function ac <function> <command number> <command...>.");
 			    }
 					 return true;
 					 break;
@@ -59,40 +59,50 @@ class Main extends PluginBase implements Listener{
 					 return true;
 					 break;
 				case "rc":
-				case "removecmd":
+				case "resetcmd":
 				     $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 					 $func = $cfg->get("/".$args[1]);
 					 $oldcmd = $func[$args[2]];
 					 $func[$args[2]] = "nothink";
-				     $sender->sendMessage("§4§l[Functions] Removed command (" . $oldcmd . ") of function " . $args[1]);
+				     $sender->sendMessage("§4§l[Functions]§r§4 Removed command (" . $oldcmd . ") of function " . $args[1]);
 					 $cfg->set("/".$args[1], $func);
 					 $cfg->save();
 					 $this->reloadConfig();
 					 return true;
 					 break;
+				case "rmc":
+				case "removecmd":
+				$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+				$func = $cfg->get("/".$args[1]);
+				if(!is_array($func)) {
+					$sender->sendMessage("§l§4[Function]§r§4 Function $args[1] does not exist! Create it with /function create $args[1]");
+				}
+				unset($func[$args[2]- 1]);
+				$cfg->set("/".$args[1], $func);
+				$cfg->save();
+				$this->reloadConfig();
+				$sender->sendMessage("§4§l[Functions]§r§4 Removed command $args[2] from function $args[1]");
+				return true;
+				break;
 				case "read":
 				     $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 				     $i = 1;
 					 $sender->sendMessage("§4§l[Functions] Commands for function " . $args[1] . ":");
-					 $funcname = $args[0];
-					 $func = $cfg->get($funcname);
-					 $default = $func[0];
-					 unset($func[0]);
+					 $funcname = $args[1];
+					 $func = $cfg->get("/".$funcname);
 					 foreach($func as $funccmds) {
-						 array_push($cmdname, $i);
 						 $sender->sendMessage("Command " . $i . ": /" . $funccmds);
 						 $i = $i + 1;
 				      }
-					  $sender->sendMessage("Default: " . $default);
 					 return true;
 					 break;
 			   default:
-				      $sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n- /function create <function>:§6 Create a function \n- /function sc <function> <command id> <command>:§6 Modify a command a function \n- /function rc <function> <command id> <command>:§6 Remove a command from a function");
+				      $sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n- /function create <function>:§6 Create a function \n- /function ac <function> <command id> <command>:§6 Add a command to a function \n- /function rc <function> <command id> <command>:§6 Reset a command from a function\n- /function rmc <function> <command id> <command>:§6 Remove a command from a function\n- /function read <function>:§6 Read all commands of a function \n");
 					  return true;
 					  break;
 			}
 			} else {
-				$sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n- /function create <function>:§6 Create a function \n- /function sc <function> <command id> <command>:§6 Modify a command a function \n- /function rc <function> <command id> <command>:§6 Remove a command from a function");
+				$sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n- /function create <function>:§6 Create a function \n- /function ac <function> <command id> <command>:§6 Add a command to a function \n- /function rc <function> <command id> <command>:§6 Reset a command from a function\n- /function rmc <function> <command id> <command>:§6 Remove a command from a function\n- /function read <function>:§6 Read all commands of a function \n");
 			}
 			return true;
 			break;
@@ -118,19 +128,19 @@ class Main extends PluginBase implements Listener{
 									  $cmd = str_ireplace("{yaw}", $sender->yaw, $cmd);
 									  $cmd = str_ireplace("{pitch}", $sender->pitch, $cmd);
 									  if(!isset($args[1])) {
-                                       $args[1] = null;
+                                       $cmd = str_ireplace("{args[0]}", "", $cmd);
 									  }
 									  $cmd = str_ireplace("{args[0]}", $args[1], $cmd);
 									  if(!isset($args[2])) {
-                                       $args[2] = null;
+                                       $cmd = str_ireplace("{args[1]}", "", $cmd);
 									  }
 									  $cmd = str_ireplace("{args[1]}", $args[2], $cmd);
 									  if(!isset($args[3])) {
-                                       $args[3] = null;
+									  $cmd = str_ireplace("{args[2]}", "", $cmd);
 									  }
 									  $cmd = str_ireplace("{args[2]}", $args[3], $cmd);
 									  if(!isset($args[4])) {
-                                       $args[4] = null;
+									  $cmd = str_ireplace("{args[3]}", $args[4], $cmd);
 									  }
 									  $cmd = str_ireplace("{args[3]}", $args[4], $cmd);
 									  $this->getServer()->dispatchCommand($sender, $cmd);
