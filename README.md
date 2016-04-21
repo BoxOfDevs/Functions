@@ -28,6 +28,19 @@ All the permissions used by Functions:
 
     - func.command.function : Allows /function, Default: OP
 
+Special replacements
+===========
+Those are what in the command will be replace by what :~)
+- {sender} : Will be replaced with sender name
+- {x} : Will be replaced with sender x coordinate
+- {y} : Will be replaced with sender y coordinate
+- {z} : Will be replaced with sender z coordinate
+- {level} : Will be replaced with sender level
+- {args[0]} : Will be replaced with the first argument of the command
+- {args[1]} : Will be replaced with the second argument of the command
+- {args[2]} : Will be replaced with the third argument of the command
+- {args[3]} : Will be replaced with the fourth argument of the command    
+
 Authors
 ========
 All the BoxOfDevs members who contributed to Functions:
