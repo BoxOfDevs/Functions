@@ -1,8 +1,6 @@
 ---
 # Welcome to the config!
 # Here will be create all the functions!
-# Do NOT modfiy the first line of a command UNTIL you know what it is
 # All other are commands :)
 version: 1.000000
-
 ...
