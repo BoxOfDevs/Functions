@@ -6,27 +6,13 @@ Commands
 =========
 All the commands currently implemented into Functions:
 
-    - /setperm <player> <permission> : Gives a player a permission
-
-    - /rmperm <player> <permission> : Removes a players permission
-
-    - /hasperm <player> <permission> : Checks if a player has a permission
-
-    - /seeperms <player> : Shows all a players permissions
+    - /function <sub-command> <function> parameters... : Create, manage and remove functions with this command
 
 Permissions
 ===========
 All the permissions used by Functions:
 
-    - instaperms: InstaPerm Universal Permission, Default: False
-
-        • instaperms.set : Allows /setperm, Default: OP
-
-        • instaperms.rm : Allows /rmperm, Default: OP
-
-        • instaperms.has : Allows /checkperm, Default: OP
-
-		• instaperms.see : Allows /seeperms, Default: OP
+    - func.command.function : Allows /function, Default: OP
 
 Authors
 ========
