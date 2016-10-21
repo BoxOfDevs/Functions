@@ -1,23 +1,25 @@
 <?php
-namespace Ad5001\Functions;
-use pocketmine\command\CommandSender;
-use pocketmine\command\Command;
-use pocketmine\command\ConsoleCommandSender;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
-use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\command\Loader;
-use pocketmine\event\Listener;
-use pocketmine\Player;
-use pocketmine\katana\Console;
-use pocketmine\server;
-use pocketmine\IPlayer;
-use pocketmine\utils\Config;
-use pocketmine\plugin\PluginBase;
 
-class Main extends PluginBase implements Listener{
-  public function onEnable(){
-	  $this->getServer()->getPluginManager()->registerEvents($this, $this);
-  }
+  namespace Ad5001\Functions;
+  use pocketmine\command\CommandSender;
+  use pocketmine\command\Command;
+  use pocketmine\command\ConsoleCommandSender;
+  use pocketmine\event\player\PlayerCommandPreprocessEvent;
+  use pocketmine\event\player\PlayerChatEvent;
+  use pocketmine\command\Loader;
+  use pocketmine\event\Listener;
+  use pocketmine\Player;
+  use pocketmine\katana\Console;
+  use pocketmine\server;
+  use pocketmine\IPlayer;
+  use pocketmine\utils\Config;
+  use pocketmine\plugin\PluginBase;
+
+  class Main extends PluginBase implements Listener{
+
+    public function onEnable(){
+      $this->getServer()->getPluginManager()->registerEvents($this, $this);
+    }
   public function onLoad(){
     }
   public function onCommand(CommandSender $sender, Command $command, $label, array $args){
