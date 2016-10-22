@@ -72,20 +72,21 @@
                 $this->reloadConfig();
                 return true;
               break;
-				case "rmc":
-				case "removecmd":
-				$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-				$func = $cfg->get("/".$args[1]);
-				if(!is_array($func)) {
-					$sender->sendMessage("§l§4[Function]§r§4 Function $args[1] does not exist! Create it with /function create $args[1]");
-				}
-				unset($func[$args[2]- 1]);
-				$cfg->set("/".$args[1], $func);
-				$cfg->save();
-				$this->reloadConfig();
-				$sender->sendMessage("§4§l[Functions]§r§4 Removed command $args[2] from function $args[1]");
-				return true;
-				break;
+
+              case "rmc":
+              case "removecmd":
+                $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+                $func = $cfg->get("/".$args[1]);
+                if(!is_array($func)){
+                  $sender->sendMessage("§l§4[Function]§r§4 Function $args[1] does not exist! Create it with /function create $args[1]");
+                }
+                unset($func[$args[2]-1]);
+                $cfg->set("/".$args[1], $func);
+                $cfg->save();
+                $this->reloadConfig();
+                $sender->sendMessage("§4§l[Functions]§r§4 Removed command $args[2] from function $args[1]");
+                return true;
+              break;
 				case "read":
 				     $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 				     $i = 1;
