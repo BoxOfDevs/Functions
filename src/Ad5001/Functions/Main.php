@@ -20,27 +20,26 @@
     public function onEnable(){
       $this->getServer()->getPluginManager()->registerEvents($this, $this);
     }
-  public function onLoad(){
-    }
-  public function onCommand(CommandSender $sender, Command $command, $label, array $args){
-    switch($command->getName()){
-		case "function":
-     	if(isset($args[0])) {
-		    switch($args[0]){
-				case "c":
-				case "create":
-				if(count($args) < 2) {
-					return false;
-				} else {
-					 $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-					  $default = ["tell {sender} This is default command, modify it with /function setc <function> <Command number> <command...>","nothink", "nothink", "nothink", "nothink"];
-					  $cfg->set("/".$args[1], $default);
-                      $cfg->save();
-					  $this->reloadConfig();
-					  $sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " has been created! You can edit it on the config or by doing /function ac <function> <command number> <command...>.");
-			    }
-					 return true;
-					 break;
+
+    public function onCommand(CommandSender $sender, Command $command, $label, array $args){
+      switch($command->getName()){
+        case "function":
+          if(isset($args[0])){
+            switch($args[0]){
+              case "c":
+              case "create":
+                if(count($args) < 2){
+                  return false;
+                }else{
+                  $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+                  $default = ["tell {sender} This is default command, modify it with /function setc <function> <Command number> <command...>","nothink", "nothink", "nothink", "nothink"];
+                  $cfg->set("/".$args[1], $default);
+                  $cfg->save();
+                  $this->reloadConfig();
+                  $sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " has been created! You can edit it on the config or by doing /function ac <function> <command number> <command...>.");
+                }
+                return true;
+              break;
 				case "addcmd":
 				  $sender->sendMessage("§4§l[Functions] Use /function ac <function> <command>! It's more speedy but your way work too");
 				case "ac":
