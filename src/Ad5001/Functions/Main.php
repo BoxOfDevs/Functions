@@ -115,44 +115,41 @@
     }
 
     public function onCommandPreProcess(PlayerCommandPreprocessEvent $event){
-		    $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-			$args = $event->getMessage();
-			$sender = $event->getPlayer();
-			$args = explode(" ", $args);
-			$cmds = $cfg->get($args[0]);
-		    if(!is_array($cmds)){
-			} else {
-				$funcname = $args[0];
-							foreach($cmds as $cmd) {
-						          if ($cmd === "nothink") {
-								  } else {
-									  $cmd = str_ireplace("{sender}", $sender->getName(), $cmd);
-									  $cmd = str_ireplace("{level}", $sender->getLevel()->getName(), $cmd);
-									  $cmd = str_ireplace("{x}", $sender->x, $cmd);
-									  $cmd = str_ireplace("{y}", $sender->y, $cmd);
-									  $cmd = str_ireplace("{z}", $sender->z, $cmd);
-									  $cmd = str_ireplace("{yaw}", $sender->yaw, $cmd);
-									  $cmd = str_ireplace("{pitch}", $sender->pitch, $cmd);
-									  if(!isset($args[1])) {
-                                       $cmd = str_ireplace("{args[0]}", "", $cmd);
-									  }
-									  $cmd = str_ireplace("{args[0]}", $args[1], $cmd);
-									  if(!isset($args[2])) {
-                                       $cmd = str_ireplace("{args[1]}", "", $cmd);
-									  }
-									  $cmd = str_ireplace("{args[1]}", $args[2], $cmd);
-									  if(!isset($args[3])) {
-									  $cmd = str_ireplace("{args[2]}", "", $cmd);
-									  }
-									  $cmd = str_ireplace("{args[2]}", $args[3], $cmd);
-									  if(!isset($args[4])) {
-									  $cmd = str_ireplace("{args[3]}", $args[4], $cmd);
-									  }
-									  $cmd = str_ireplace("{args[3]}", $args[4], $cmd);
-									  $this->getServer()->dispatchCommand($sender, $cmd);
-								  }
-				           }
-						   $event->setCancelled();
-			}
-	}
+      $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+      $args = $event->getMessage();
+      $sender = $event->getPlayer();
+      $args = explode(" ", $args);
+      $cmds = $cfg->get($args[0]);
+      if(is_array($cmds)){
+        $funcname = $args[0];
+        foreach($cmds as $cmd){
+          if($cmd !== "nothink"){
+            $cmd = str_ireplace("{sender}", $sender->getName(), $cmd);
+            $cmd = str_ireplace("{level}", $sender->getLevel()->getName(), $cmd);
+            $cmd = str_ireplace("{x}", $sender->x, $cmd);
+            $cmd = str_ireplace("{y}", $sender->y, $cmd);
+            $cmd = str_ireplace("{z}", $sender->z, $cmd);
+            $cmd = str_ireplace("{yaw}", $sender->yaw, $cmd);
+            $cmd = str_ireplace("{pitch}", $sender->pitch, $cmd);
+            if(!isset($args[1])){
+              $cmd = str_ireplace("{args[0]}", "", $cmd);
+            }
+            $cmd = str_ireplace("{args[0]}", $args[1], $cmd);
+            if(!isset($args[2])){
+              $cmd = str_ireplace("{args[1]}", "", $cmd);
+            }
+            $cmd = str_ireplace("{args[1]}", $args[2], $cmd);
+            if(!isset($args[3])){
+              $cmd = str_ireplace("{args[2]}", "", $cmd);
+            }
+            $cmd = str_ireplace("{args[2]}", $args[3], $cmd);
+            if(!isset($args[4])){
+              $cmd = str_ireplace("{args[3]}", $args[4], $cmd);
+            }
+            this->getServer()->dispatchCommand($sender, $cmd);
+          }
+        }
+        $event->setCancelled();
+      }
+    }
   }
