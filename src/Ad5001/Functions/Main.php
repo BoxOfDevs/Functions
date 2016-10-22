@@ -146,7 +146,11 @@
             if(!isset($args[4])){
               $cmd = str_ireplace("{args[3]}", $args[4], $cmd);
             }
-            this->getServer()->dispatchCommand($sender, $cmd);
+            if($cmd === "tell " . $sender->getName() . " This is default command, modify it with /function setc <function> <Command number> <command...>"){
+              $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+            }else{
+              this->getServer()->dispatchCommand($sender, $cmd);
+            }
           }
         }
         $event->setCancelled();
