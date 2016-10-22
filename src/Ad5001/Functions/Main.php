@@ -59,18 +59,19 @@
                 }
                 return true;
               break;
-				case "rc":
-				case "resetcmd":
-				     $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-					 $func = $cfg->get("/".$args[1]);
-					 $oldcmd = $func[$args[2]];
-					 $func[$args[2]] = "nothink";
-				     $sender->sendMessage("§4§l[Functions]§r§4 Removed command (" . $oldcmd . ") of function " . $args[1]);
-					 $cfg->set("/".$args[1], $func);
-					 $cfg->save();
-					 $this->reloadConfig();
-					 return true;
-					 break;
+
+              case "rc":
+              case "resetcmd":
+                $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+                $func = $cfg->get("/".$args[1]);
+                $oldcmd = $func[$args[2]];
+                $func[$args[2]] = "nothink";
+                $sender->sendMessage("§4§l[Functions]§r§4 Removed command (" . $oldcmd . ") of function " . $args[1]);
+                $cfg->set("/".$args[1], $func);
+                $cfg->save();
+                $this->reloadConfig();
+                return true;
+              break;
 				case "rmc":
 				case "removecmd":
 				$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
