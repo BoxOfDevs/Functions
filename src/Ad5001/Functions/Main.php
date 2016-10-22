@@ -40,25 +40,25 @@
                 }
                 return true;
               break;
-				case "addcmd":
-				  $sender->sendMessage("§4§l[Functions] Use /function ac <function> <command>! It's more speedy but your way work too");
-				case "ac":
-				$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-				if(is_array($cfg->get("/".$args[1]))) {
-				     unset($args[0]);
-					 $funcname = $args[1];
-					 unset($args[1]);
-					 $funccmds = $cfg->get("/".$funcname);
-					 array_push($funccmds, implode(" ", $args));
-				     $cfg->set("/".$funcname, $funccmds);
-					 $cfg->save();
-					 $sender->sendMessage("§4§l[Functions]§r§4 Command ". implode(" ", $args)."  for function " . $funcname . " has been added!");
-					 $this->reloadConfig();
-				} else {
-					$sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " not found. Create it with /function c " . $args[1]);
-				}
-					 return true;
-					 break;
+
+              case "ac":
+              case "addcmd":
+                $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+                if(is_array($cfg->get("/".$args[1]))){
+                  unset($args[0]);
+                  $funcname = $args[1];
+                  unset($args[1]);
+                  $funccmds = $cfg->get("/".$funcname);
+                  array_push($funccmds, implode(" ", $args));
+                  $cfg->set("/".$funcname, $funccmds);
+                  $cfg->save();
+                  $sender->sendMessage("§4§l[Functions]§r§4 Command ". implode(" ", $args)."  for function " . $funcname . " has been added!");
+                  $this->reloadConfig();
+                }else{
+                  $sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " not found. Create it with /function c " . $args[1]);
+                }
+                return true;
+              break;
 				case "rc":
 				case "resetcmd":
 				     $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
