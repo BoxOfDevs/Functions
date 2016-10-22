@@ -87,18 +87,19 @@
                 $sender->sendMessage("§4§l[Functions]§r§4 Removed command $args[2] from function $args[1]");
                 return true;
               break;
-				case "read":
-				     $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-				     $i = 1;
-					 $sender->sendMessage("§4§l[Functions] Commands for function " . $args[1] . ":");
-					 $funcname = $args[1];
-					 $func = $cfg->get("/".$funcname);
-					 foreach($func as $funccmds) {
-						 $sender->sendMessage("Command " . $i . ": /" . $funccmds);
-						 $i = $i + 1;
-				      }
-					 return true;
-					 break;
+
+              case "read":
+                $cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+                $i = 1;
+                $sender->sendMessage("§4§l[Functions] Commands for function " . $args[1] . ":");
+                $funcname = $args[1];
+                $func = $cfg->get("/".$funcname);
+                foreach($func as $funccmds){
+                  $sender->sendMessage("Command " . $i . ": /" . $funccmds);
+                  $i += 1;
+                }
+                return true;
+              break;
 			   default:
 				      $sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n- /function create <function>:§6 Create a function \n- /function ac <function> <command id> <command>:§6 Add a command to a function \n- /function rc <function> <command id> <command>:§6 Reset a command from a function\n- /function rmc <function> <command id> <command>:§6 Remove a command from a function\n- /function read <function>:§6 Read all commands of a function \n");
 					  return true;
