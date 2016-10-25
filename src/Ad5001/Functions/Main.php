@@ -148,6 +148,9 @@
             }
             if($cmd === "tell " . $sender->getName() . " This is default command, modify it with /function setc <function> <Command number> <command...>"){
               $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+            }elseif(strpos($cmd, "{console}")){
+              $cmd = str_ireplace("{console}", "", $cmd);
+              $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
             }else{
               this->getServer()->dispatchCommand($sender, $cmd);
             }
