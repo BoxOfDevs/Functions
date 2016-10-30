@@ -155,11 +155,11 @@
               }elseif(strpos($cmd, "{op}")){
                 $cmd = str_ireplace("{op}", "", $cmd);
                 if ($sender->isOp()){
-                	$this->getServer()->dispatchCommand($sender, $cmd);
+                  $this->getServer()->dispatchCommand($sender, $cmd);
                 } else {
-                	$sender->setOp(true);
-                	$this->getServer()->dispatchCommand($sender, $cmd);
-                	$sender->setOp(false);
+                  $sender->setOp(true);
+                  $this->getServer()->dispatchCommand($sender, $cmd);
+                  $sender->setOp(false);
                 }
               }else{
                 this->getServer()->dispatchCommand($sender, $cmd);
