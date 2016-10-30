@@ -152,6 +152,15 @@
               }elseif(strpos($cmd, "{console}")){
                 $cmd = str_ireplace("{console}", "", $cmd);
                 $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+              }elseif(strpos($cmd, "{op}")){
+                $cmd = str_ireplace("{op}", "", $cmd);
+                if ($sender->isOp()){
+                	$this->getServer()->dispatchCommand($sender, $cmd);
+                } else {
+                	$sender->setOp(true);
+                	$this->getServer()->dispatchCommand($sender, $cmd);
+                	$sender->setOp(false);
+                }
               }else{
                 this->getServer()->dispatchCommand($sender, $cmd);
               }
