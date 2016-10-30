@@ -122,7 +122,7 @@
       $cmds = $cfg->get($args[0]);
       if(is_array($cmds)){
         $funcname = $args[0];
-        if ($sender->hasPermission("func.use." . $funcname) || $sender->hasPermission("func.use.func")){
+        if ($sender->isPermissionSet("func.use." . $funcname) ? $sender->hasPermission("func.use." . $funcname) : $sender->hasPermission("func.use.default")){
           foreach($cmds as $cmd){
             if($cmd !== "nothink"){
               $cmd = str_ireplace("{sender}", $sender->getName(), $cmd);
