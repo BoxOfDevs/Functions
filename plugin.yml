@@ -14,4 +14,7 @@ permissions:
    func.command.function:
      default: op
      description: "Create, manage and remove functions with this command"
+   func.use.default:
+     default: true
+     description: "Defines users permission to use a specific function if permission node func.use.functionname is not set"
 ...

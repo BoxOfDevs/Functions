@@ -122,39 +122,52 @@
       $cmds = $cfg->get($args[0]);
       if(is_array($cmds)){
         $funcname = $args[0];
-        foreach($cmds as $cmd){
-          if($cmd !== "nothink"){
-            $cmd = str_ireplace("{sender}", $sender->getName(), $cmd);
-            $cmd = str_ireplace("{level}", $sender->getLevel()->getName(), $cmd);
-            $cmd = str_ireplace("{x}", $sender->x, $cmd);
-            $cmd = str_ireplace("{y}", $sender->y, $cmd);
-            $cmd = str_ireplace("{z}", $sender->z, $cmd);
-            $cmd = str_ireplace("{yaw}", $sender->yaw, $cmd);
-            $cmd = str_ireplace("{pitch}", $sender->pitch, $cmd);
-            if(!isset($args[1])){
-              $cmd = str_ireplace("{args[0]}", "", $cmd);
-            }
-            $cmd = str_ireplace("{args[0]}", $args[1], $cmd);
-            if(!isset($args[2])){
-              $cmd = str_ireplace("{args[1]}", "", $cmd);
-            }
-            $cmd = str_ireplace("{args[1]}", $args[2], $cmd);
-            if(!isset($args[3])){
-              $cmd = str_ireplace("{args[2]}", "", $cmd);
-            }
-            $cmd = str_ireplace("{args[2]}", $args[3], $cmd);
-            if(!isset($args[4])){
-              $cmd = str_ireplace("{args[3]}", $args[4], $cmd);
-            }
-            if($cmd === "tell " . $sender->getName() . " This is default command, modify it with /function setc <function> <Command number> <command...>"){
-              $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
-            }elseif(strpos($cmd, "{console}")){
-              $cmd = str_ireplace("{console}", "", $cmd);
-              $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
-            }else{
-              this->getServer()->dispatchCommand($sender, $cmd);
+        if ($sender->isPermissionSet("func.use." . $funcname) ? $sender->hasPermission("func.use." . $funcname) : $sender->hasPermission("func.use.default")){
+          foreach($cmds as $cmd){
+            if($cmd !== "nothink"){
+              $cmd = str_ireplace("{sender}", $sender->getName(), $cmd);
+              $cmd = str_ireplace("{level}", $sender->getLevel()->getName(), $cmd);
+              $cmd = str_ireplace("{x}", $sender->x, $cmd);
+              $cmd = str_ireplace("{y}", $sender->y, $cmd);
+              $cmd = str_ireplace("{z}", $sender->z, $cmd);
+              $cmd = str_ireplace("{yaw}", $sender->yaw, $cmd);
+              $cmd = str_ireplace("{pitch}", $sender->pitch, $cmd);
+              if(!isset($args[1])){
+                $cmd = str_ireplace("{args[0]}", "", $cmd);
+              }
+              $cmd = str_ireplace("{args[0]}", $args[1], $cmd);
+              if(!isset($args[2])){
+                $cmd = str_ireplace("{args[1]}", "", $cmd);
+              }
+              $cmd = str_ireplace("{args[1]}", $args[2], $cmd);
+              if(!isset($args[3])){
+                $cmd = str_ireplace("{args[2]}", "", $cmd);
+              }
+              $cmd = str_ireplace("{args[2]}", $args[3], $cmd);
+              if(!isset($args[4])){
+                $cmd = str_ireplace("{args[3]}", $args[4], $cmd);
+              }
+              if($cmd === "tell " . $sender->getName() . " This is default command, modify it with /function setc <function> <Command number> <command...>"){
+                $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+              }elseif(strpos($cmd, "{console}")){
+                $cmd = str_ireplace("{console}", "", $cmd);
+                $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
+              }elseif(strpos($cmd, "{op}")){
+                $cmd = str_ireplace("{op}", "", $cmd);
+                if ($sender->isOp()){
+                  $this->getServer()->dispatchCommand($sender, $cmd);
+                } else {
+                  $sender->setOp(true);
+                  $this->getServer()->dispatchCommand($sender, $cmd);
+                  $sender->setOp(false);
+                }
+              }else{
+                this->getServer()->dispatchCommand($sender, $cmd);
+              }
             }
           }
+        else {
+          $sender->sendMessage("You do not have permission to use this function.");
         }
         $event->setCancelled();
       }
