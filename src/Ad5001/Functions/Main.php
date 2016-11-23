@@ -162,7 +162,7 @@
                   $sender->setOp(false);
                 }
               }else{
-                this->getServer()->dispatchCommand($sender, $cmd);
+                $this->getServer()->dispatchCommand($sender, $cmd);
               }
             }
           }
