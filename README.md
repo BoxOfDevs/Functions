@@ -48,3 +48,9 @@ All the BoxOfDevs members who contributed to Functions:
     - Ad5001
     
     - TheDragonRing
+    
+    - applqpak
+    
+    - Dog2puppy
+    
+    - remotevase
