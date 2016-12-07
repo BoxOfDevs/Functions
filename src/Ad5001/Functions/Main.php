@@ -102,12 +102,12 @@
               break;
 
               default:
-                $sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n- /function create <function>:§6 Create a function \n- /function ac <function> <command id> <command>:§6 Add a command to a function \n- /function rc <function> <command id> <command>:§6 Reset a command from a function\n- /function rmc <function> <command id> <command>:§6 Remove a command from a function\n- /function read <function>:§6 Read all commands of a function \n");
+                $sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n------------------------- \n- /function create <function>:§6 Create a function \n- /function ac <function> <command id> <command>:§6 Add a command to a function \n- /function rc <function> <command id> <command>:§6 Reset a command from a function\n- /function rmc <function> <command id> <command>:§6 Remove a command from a function\n- /function read <function>:§6 Read all commands of a function \n---------------------------\n");
                 return true;
               break;
             }
           }else{
-            $sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n- /function create <function>:§6 Create a function \n- /function ac <function> <command id> <command>:§6 Add a command to a function \n- /function rc <function> <command id> <command>:§6 Reset a command from a function\n- /function rmc <function> <command id> <command>:§6 Remove a command from a function\n- /function read <function>:§6 Read all commands of a function \n");
+            $sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n------------------------- \n- /function create <function>:§6 Create a function \n- /function ac <function> <command id> <command>:§6 Add a command to a function \n- /function rc <function> <command id> <command>:§6 Reset a command from a function\n- /function rmc <function> <command id> <command>:§6 Remove a command from a function\n- /function read <function>:§6 Read all commands of a function \n---------------------------\n");
           }
           return true;
         break;
