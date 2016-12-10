@@ -4,6 +4,7 @@ author: Ad5001
 version: "1.0"
 api:
 - 1.14.0
+- 2.0.0
 main: Ad5001\Functions\Main
 commands: 
   function:
