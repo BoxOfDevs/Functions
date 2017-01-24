@@ -18,6 +18,7 @@
     public function onEnable(){
         $this->cmds = [];
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->saveDefaultConfig();
         foreach($this->getConfig()->getAll() as $cmd => $cmds) {
             $cmd  = substr($cmd, 1); // Removing the "/"
             $this->cmds[$cmd] = new \pocketmine\command\PluginCommand($name, $this);
