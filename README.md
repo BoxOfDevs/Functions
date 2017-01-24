@@ -54,3 +54,6 @@ All the BoxOfDevs members who contributed to Functions:
     - Dog2puppy
     
     - remotevase
+Read The License!!!
+========
+Honestly, make sure you do.
