@@ -45,8 +45,8 @@
                   $cfg->set("/".$args[1], $default);
                   $cfg->save();
                   $this->reloadConfig();
-                  $this->cmds[$args[1]] = new \pocketmine\command\PluginCommand($name, $this);
-                  $this->cmds[$args[1]]->setUsage("/$cmd [arguments]");
+                  $this->cmds[$args[1]] = new \pocketmine\command\PluginCommand($args[1], $this);
+                  $this->cmds[$args[1]]->setUsage("/{$args[1]} [arguments]");
                   $this->cmds[$args[1]]->setDescription("Runs function $args[1].");
                   $this->cmds[$args[1]]->register($this->getServer()->getCommandMap());
                   $sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " has been created! You can edit it on the config or by doing /function ac <function> <command number> <command...>.");
@@ -158,20 +158,25 @@
                     $cmd = str_ireplace("{pitch}", $sender->pitch, $cmd);
                     if(!isset($args[1])){
                         $cmd = str_ireplace("{args[0]}", "", $cmd);
+                    } else {
+                      $cmd = str_ireplace("{args[0]}", $args[1], $cmd);
                     }
-                    $cmd = str_ireplace("{args[0]}", $args[1], $cmd);
                     if(!isset($args[2])){
                         $cmd = str_ireplace("{args[1]}", "", $cmd);
+                    } else {
+                        $cmd = str_ireplace("{args[1]}", $args[2], $cmd);
                     }
-                    $cmd = str_ireplace("{args[1]}", $args[2], $cmd);
-                    $cmd = str_ireplace("{args}", $args, $cmd);
                     if(!isset($args[3])){
                         $cmd = str_ireplace("{args[2]}", "", $cmd);
+                    } else {
+                        $cmd = str_ireplace("{args[2]}", $args[3], $cmd);
                     }
-                    $cmd = str_ireplace("{args[2]}", $args[3], $cmd);
                     if(!isset($args[4])){
+                        $cmd = str_ireplace("{args[3]}", "", $cmd);
+                    } else {
                         $cmd = str_ireplace("{args[3]}", $args[4], $cmd);
                     }
+                    $cmd = str_ireplace("{args}", json_encode($args), $cmd);
                     if($cmd === "tell " . $sender->getName() . " This is default command, modify it with /function setc <function> <Command number> <command...>"){
                         $this->getServer()->dispatchCommand(new ConsoleCommandSender(), $cmd);
                     }elseif(strpos($cmd, "{console}")){
