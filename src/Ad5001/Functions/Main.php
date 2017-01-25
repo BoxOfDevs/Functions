@@ -21,7 +21,7 @@
         $this->saveDefaultConfig();
         foreach($this->getConfig()->getAll() as $cmd => $cmds) {
             $cmd  = substr($cmd, 1); // Removing the "/"
-            $this->cmds[$cmd] = new \pocketmine\command\PluginCommand($name, $this);
+            $this->cmds[$cmd] = new \pocketmine\command\PluginCommand($cmd, $this);
             $this->cmds[$cmd]->setUsage("/$cmd [arguments]");
             $this->cmds[$cmd]->setDescription("Runs function $cmd.");
             $this->cmds[$cmd]->register($this->getServer()->getCommandMap());
