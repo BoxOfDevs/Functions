@@ -1,15 +1,26 @@
-# Brief description (why it is an issue)
+<!-- You DON'T have to delete the comments (<!- Text ->), they won't be shown in the final issue -->
 
-# Steps to reproduce (how can anyone reproduce the issue)
+### Brief description
+<!-- Why its it an issue? -->
 
-# Expected result (what do you want to happen)
+### Steps to reproduce
+<!-- How can anyone reproduce the issue? -->
+1. ...
+2. ...
+3. ...
 
-# Actual result (what actually happens)
+### Expected result
+<!-- What do you want to happen? -->
 
-# OS Infomation
+### Actual result
+<!-- What actually happens: -->
 
-Functions version(Commit number or link to where you got your .phar): 
-Software Version: 
-OS Version: 
+### Server Information
+* Functions Version: <!-- Commit number or the  link to where you got your .phar -->
+* Software Version: <!-- e.g. PMMP Jenkins build #123 -->
+* Server OS: <!-- e.g. Debian 8 -->
 
-# Logs/Errors
+### CrashDumps/Errors
+```
+Paste your CrashDump or error by replacing this text (DON'T delete the backticks!)
+```
