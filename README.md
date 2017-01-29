@@ -106,7 +106,7 @@ Passwords are encrypted using an sha512 encryption then converted to ANSII, then
 So how to do this:  
 First of all, as you did before, you need to have the function you want to share on a server.       
 Then, run command /function export &lt;function name&gt; &lt;password&gt; .     
-You would see if functions succefully encrypted your assword at the success message.    
+You would see if functions successfully encrypted your password at the success message.    
 Now, as we did before, share it into an another server and put it into the Functions plugin folder.     
 And finally run command /function import &lt;name of he file without the .func&gt; &lt;password&gt; .   
 If no password included for a function that need one, you will get a message telling you to enter the password.     
