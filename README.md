@@ -101,4 +101,4 @@ All the BoxOfDevs members who contributed to Functions:
     - remotevase
 Read The License!!!
 ========
-Please make sure you read the license, upon downloading any file of the software, you agree to all its terms. The license may be found [here.] (https://raw.githubusercontent.com/BoxOfDevs/Functions/master/LICENSE)
+Please make sure you read the license, upon downloading any file of the software, you agree to all its terms. The license may be found [here.] (http://bit.ly/2jikqXv)
