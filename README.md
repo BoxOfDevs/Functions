@@ -54,7 +54,7 @@ Those are what in the command will be replace by what :~)
 - {args[3]} : Will be replaced with the fourth argument of the command    
 
 You can also enter:
-- {op} to set the user OP just for the command then unop him if (he wasn't OP).
+- {op} to set the user OP just for the command then unop him if (he wasn't OP).TtTT
 - {console} to execute the command as the console
 
 Here comes the complex part: the if statements.     
@@ -101,4 +101,4 @@ All the BoxOfDevs members who contributed to Functions:
     - remotevase
 Read The License!!!
 ========
-Honestly, make sure you do.
+Please make sure you read the license, upon downloading any file of the software, you agree to all its terms. The license may be found [here.] (https://raw.githubusercontent.com/BoxOfDevs/Functions/master/LICENSE)
