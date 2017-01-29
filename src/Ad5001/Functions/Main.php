@@ -42,9 +42,7 @@
 							switch($args[0]){
 								case "c":
 								case "create":
-								if(count($args) < 2){
-									return false;
-								}else{
+								if(count($args) >= 2){
 									$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 									$default = ["tell {sender} This is default command, modify it with /function setc <function> <Command number> <command...>{console}"];
 									$cfg->set("/".$args[1], $default);
@@ -55,13 +53,14 @@
 									$this->cmds[$args[1]]->setDescription("Runs function $args[1].");
 									$this->getServer()->getCommandMap()->register($args[1], $this->cmds[$args[1]]);
 									$sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " has been created! You can edit it on the config or by doing /function ac <function> <command number> <command...>.");
+									return true;
 								}
-								return true;
 							break;
 							case "ac":
 							case "addc":
 							case "acmd":
 							case "addcmd":
+							if(count($args) >= 3){
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 								if(is_array($cfg->get("/".$args[1]))){
 									unset($args[0]);
@@ -77,106 +76,240 @@
 									$sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " not found. Create it with /function c " . $args[1]);
 								}
 								return true;
+							}
 							break;
 							case "rc":
 							case "resetcmd":
+							if(count($args) >= 3){
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-								$func = $cfg->get("/".$args[1]);
-								$oldcmd = $func[$args[2]];
-								$func[$args[2]] = "nothink";
-								$sender->sendMessage("§4§l[Functions]§r§4 Removed command (" . $oldcmd . ") of function " . $args[1]);
-								$cfg->set("/".$args[1], $func);
-								$cfg->save();
-								$this->reloadConfig();
-								return true;
+								if(is_array($cfg->get("/".$args[1]))) {
+									$func = $cfg->get("/".$args[1]);
+									$oldcmd = $func[$args[2]];
+									$func[$args[2]] = "nothink";
+									$sender->sendMessage("§4§l[Functions]§r§4 Removed command (" . $oldcmd . ") of function " . $args[1]);
+									$cfg->set("/".$args[1], $func);
+									$cfg->save();
+									$this->reloadConfig();
+									return true;
+								} else {
+									$sender->sendMessage("§4§l[Functions]§r§4 No function found with name " . $args[1] . ".");
+								}
+							}
 							break;
 							case "rmc":
 							case "removecmd":
+							if(count($args) >= 3){
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-								$func = $cfg->get("/".$args[1]);
-								if(!is_array($func)){
-									$sender->sendMessage("§l§4[Function]§r§4 Function $args[1] does not exist! Create it with /function create $args[1]");
+								if(is_array($cfg->get("/".$args[1]))) {
+									$func = $cfg->get("/".$args[1]);
+									if(!is_array($func)){
+										$sender->sendMessage("§l§4[Function]§r§4 Function $args[1] does not exist! Create it with /function create $args[1]");
+									}
+									unset($func[$args[2]-1]);
+									$cfg->set("/".$args[1], $func);
+									$cfg->save();
+									$this->reloadConfig();
+									$sender->sendMessage("§4§l[Functions]§r§4 Removed command $args[2] from function $args[1]");
+									return true;
+								} else {
+									$sender->sendMessage("§4§l[Functions]§r§4 No function found with name " . $args[1] . ".");
 								}
-								unset($func[$args[2]-1]);
-								$cfg->set("/".$args[1], $func);
-								$cfg->save();
-								$this->reloadConfig();
-								$sender->sendMessage("§4§l[Functions]§r§4 Removed command $args[2] from function $args[1]");
-								return true;
+							}
 							break;
 							case "read":
+							if(count($args) >= 2){
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-								$i = 1;
-								$sender->sendMessage("§4§l[Functions] Commands for function " . $args[1] . ":");
-								$funcname = $args[1];
-								$func = $cfg->get("/".$funcname);
-								foreach($func as $funccmds){
-									$sender->sendMessage("Command " . $i . ": /" . $funccmds);
-									$i += 1;
+								if(is_array($cfg->get("/".$args[1]))) {
+									$i = 1;
+									$sender->sendMessage("§4§l[Functions] Commands for function " . $args[1] . ":");
+									$funcname = $args[1];
+									$func = $cfg->get("/".$funcname);
+									foreach($func as $funccmds){
+										$sender->sendMessage("Command " . $i . ": /" . $funccmds);
+										$i += 1;
+									}
+									return true;
+								} else {
+									$sender->sendMessage("§4§l[Functions]§r§4 No function found with name " . $args[1] . ".");
 								}
-								return true;
+							}
 							break;
 							case "delete":
 							case "remove":
 							case "del":
 							case "rm":
+							if(count($args) >= 2){
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-								$cfg->remove("/", $args[1]);
-								$cfg->save();
-								$this->reloadConfig();
-								$this->getServer()->getCommandMap()->unregister($this->cmds[$args[1]]);
-								unset($this->cmds[$args[1]]);
-								$sender->sendMessage("§4§l[Functions]§r§4 Succefully removed function " . $args[1] . ".");
-								return true;
+								if(is_array($cfg->get("/".$args[1]))) {
+									$cfg->remove("/", $args[1]);
+									$cfg->save();
+									$this->reloadConfig();
+									$this->cmds[$args[1]]->unregister($this->getServer()->getCommandMap());
+									unset($this->cmds[$args[1]]);
+									$sender->sendMessage("§4§l[Functions]§r§4 Succefully removed function " . $args[1] . ".");
+									return true;
+								} else {
+									$sender->sendMessage("§4§l[Functions]§r§4 No function found with name " . $args[1] . ".");
+								}
+							}
 							break;
 							case "setdesc":
 							case "description":
 							case "setdescription":
 							case "desc":
+							if(count($args) >= 2){
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-								$func = $cfg->get("/" . $args[1]);
-								$name = $args[1];
-								unset($args[0], $args[1]);
-								$func["desc"] = implode(" ", $args);
-								$cfg->set("/" . $name, $func);
-								$this->cmds[$name]->setDescription(implode(" ", $args));
-								$cfg->save();
-								$this->reloadConfig();
-								$sender->sendMessage("§4§l[Functions]§r§4 Succefully set description of function " . $name . " to ". implode(" ", $args) .".");
+								if(is_array($cfg->get("/".$args[1]))) {
+									$func = $cfg->get("/" . $args[1]);
+									$name = $args[1];
+									unset($args[0], $args[1]);
+									$func["desc"] = implode(" ", $args);
+									$cfg->set("/" . $name, $func);
+									$this->cmds[$name]->setDescription(implode(" ", $args));
+									$cfg->save();
+									$this->reloadConfig();
+									$sender->sendMessage("§4§l[Functions]§r§4 Succefully set description of function " . $name . " to ". implode(" ", $args) .".");
+									return true;
+								} else {
+									$sender->sendMessage("§4§l[Functions]§r§4 No function found with name " . $args[1] . ".");
+								}
+							}
 							break;
 							case "setuse":
 							case "usage":
 							case "setsuage":
 							case "use":
+							if(count($args) >= 2){
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-								$func = $cfg->get("/" . $args[1]);
-								$name = $args[1];
-								unset($args[0], $args[1]);
-								$func["usage"] = implode(" ", $args);
-								$cfg->set("/" . $name, $func);
-								$this->cmds[$name]->setUsage(implode(" ", $args));
-								$cfg->save();
-								$this->reloadConfig();
-								$sender->sendMessage("§4§l[Functions]§r§4 Succefully set usage of function " . $name . " to ". implode(" ", $args) .".");
+								if(is_array($cfg->get("/".$args[1]))) {
+									$func = $cfg->get("/" . $args[1]);
+									$name = $args[1];
+									unset($args[0], $args[1]);
+									$func["usage"] = implode(" ", $args);
+									$cfg->set("/" . $name, $func);
+									$this->cmds[$name]->setUsage(implode(" ", $args));
+									$cfg->save();
+									$this->reloadConfig();
+									$sender->sendMessage("§4§l[Functions]§r§4 Succefully set usage of function " . $name . " to ". implode(" ", $args) .".");
+									return true;
+								} else {
+									$sender->sendMessage("§4§l[Functions]§r§4 No function found with name " . $args[1] . ".");
+								}
+							}
 							break;
 							case "setc":
 							case "setcmd":
 							case "cmd":
 							case "command":
 							case "setcommand":
+							if(count($args) >= 3){
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-								$func = $cfg->get("/" . $args[1]);
-								$name = $args[1];
-								$id = $args[2];
-								unset($args[0], $args[1], $args[2]);
-								$func[$id] = implode(" ", $args);
-								$cfg->set("/" . $name, $func);
-								$cfg->save();
-								$this->reloadConfig();
-								$sender->sendMessage("§4§l[Functions]§r§4 Succefully set command $id of function " . $name . " to ". implode(" ", $args) .".");
+								if(is_array($cfg->get("/".$args[1]))) {
+									$func = $cfg->get("/" . $args[1]);
+									$name = $args[1];
+									$id = $args[2];
+									unset($args[0], $args[1], $args[2]);
+									$func[$id] = implode(" ", $args);
+									$cfg->set("/" . $name, $func);
+									$cfg->save();
+									$this->reloadConfig();
+									$sender->sendMessage("§4§l[Functions]§r§4 Succefully set command $id of function " . $name . " to ". implode(" ", $args) .".");
+									return true;
+								} else {
+									$sender->sendMessage("§4§l[Functions]§r§4 No function found with name " . $args[1] . ".");
+								}
+							}
+							break;
+							case "import":
+							case "createfrom":
+							case "cfrom":
+							case "createf":
+							if(count($args) >= 2){
+								if(file_exists($this->getDataFolder() . $args[1] . ".func")) {
+									$num = 0;
+									$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+									$content = file_get_contents($this->getDataFolder() . $args[1] . ".func");
+									if(substr($content, 0, 5) == "PWD?1" && !isset($args[2])) {
+										$sender->sendMessage("§l§4[Functions]§r§4 This function is encrypted using a password. Please enter the password to import it.");
+										return false;
+									} elseif(substr($content, 0, 5) == "PWD?1" && isset($args[2])) {
+										$this->getLogger()->debug("Encrypting password to decrypt function...");
+										$pwd = str_split(hash("sha512", $args[2]));
+										// Converting sha512 string to a number addable to this.
+										for($i = 0; $i < 128; $i++) {
+											$num += ord($pwd[$i]) * $i;
+										}
+									}
+									$content = substr($content, 5);
+									$chars = str_split($content);
+									foreach($chars as $key => $char) {
+										$chars[$key] = chr(ord($char) - 23 - $num);
+									}
+									$chars = implode("", $chars);
+									$default = @unserialize($chars);
+									if($default == false) {
+										$sender->sendMessage("§l§4[Functions]§r§4 Incorect password. Please retry.");
+										return false;
+									}
+									$name = $default["name"];
+									unset($default["name"]);
+									$cfg->set("/".$name, $default);
+									$cfg->save();
+									$this->reloadConfig();
+									$this->cmds[$name] = new \pocketmine\command\PluginCommand($name, $this);
+									$this->cmds[$name]->setUsage(isset($default["usage"]) ? $default["usage"] :"/$name [arguments]");
+									$this->cmds[$name]->setDescription(isset($default["desc"]) ? $default["desc"] : "Runs function $name");
+									$this->getServer()->getCommandMap()->register($name, $this->cmds[$name]);
+									$sender->sendMessage("§4§l[Functions]§r§4 Function " . $name. " has been succefully imported from " . $args[1] . ".func! You can now take a look at it using /function read $name.");
+									return true;
+								}
+							}
+							break;
+							case "export":
+							case "expt":
+							if(count($args) >= 2){
+								if(file_exists($this->getDataFolder() . $args[1] . ".func")) $sender->sendMessage("File with name ". $args[1] . ".func already exists. Overwriting....");
+								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+								$num = 0;
+								if(is_array($cfg->get("/".$args[1]))) {
+									if(isset($args[2])) { // Set password to prevent from leaking.
+										$pwd = str_split(hash("sha512", $args[2]));
+										// Converting sha512 string to a number addable to this.
+										for($i = 0; $i < 128; $i++) {
+											$num += ord($pwd[$i]) * $i;
+										}
+									}
+									$chars = str_split(serialize(array_merge($cfg->get("/".$args[1]), ["name" => $args[1]])));
+									foreach($chars as $key => $char) {
+										$chars[$key] = chr(ord($char) + 23 + $num); // Encrypting so it's not editable using a text editor.
+									}
+									$chars = implode("", $chars);
+									if(isset($args[2])) {
+										$chars = "PWD?1" . $chars;
+									} else {
+										$chars = "PWD?0" . $chars;
+									}
+									file_put_contents($this->getDataFolder() . $args[1] . ".func", $chars);
+									$sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " has been succefully exported to " . $args[1] . ".func! You can now share it to any other server" . (isset($args[2]) ? " using password " . $args[2] : "") . ".");
+									return true;
+								} else {
+									$sender->sendMessage("§4§l[Functions]§r§4 No function found with name " . $args[1] . ".");
+								}
+							}
 							break;
 							default:
-								$sender->sendMessage("§4§l[Functions]§r§4 Help for Function: \n------------------------- \n- /function create <function>:§6 Create a function \n- /function setcmd <function> <command id> <command>:§6 Sets a command on a function\n- /function usage <function> <usage>:§6 Sets the usage of a function  \n- /function desc <function> <description>:§6 Sets the description of a function \n- /function ac <function> <command>:§6 Add a command to a function  \n- /function rc <function> <command id> <command>:§6 Reset a command from a function\n- /function rmc <function> <command id> <command>:§6 Remove a command from a function\n- /function read <function>:§6 Read all commands of a function \n- /function delete <function>:§6 Deletes a function \n---------------------------\n");
+								$sender->sendMessage("§4§l[Functions]§r§4 Help for Function:
+-------------------------
+- /function create <function>:§6 Create a function
+- /function setcmd <function> <command id> <command>:§6 Sets a command on a function
+- /function usage <function> <usage>:§6 Sets the usage of a function
+- /function desc <function> <description>:§6 Sets the description of a function
+- /function ac <function> <command>:§6 Add a command to a function
+- /function rc <function> <command id> <command>:§6 Reset a command from a function
+- /function rmc <function> <command id> <command>:§6 Remove a command from a function
+- /function read <function>:§6 Read all commands of a function
+- /function delete <function>:§6 Deletes a function
+---------------------------");
 								return true;
 							break;
 						}
@@ -186,6 +319,10 @@
 					return true;
 					break;
 			}
+
+
+
+			// Executing commands
 				$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 				$cmds = $cfg->get("/" . $command->getName());
 				var_dump($cmds);
