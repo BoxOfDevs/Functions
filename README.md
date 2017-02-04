@@ -1,6 +1,9 @@
 Functions Description
 ======================
-Ever wants to make your own commands? Well, now you can! Using the functions plugin a user can set a function, and then on running a certain command, that function will be run - Enjoy :D
+
+[![Poggit-CI](https://poggit.pmmp.io/ci.badge/BoxOfDevs/Functions/Functions)](https://poggit.pmmp.io/ci/BoxOfDevs/Functions/Functions)
+
+Ever wanted to make your own commands? Well, now you can! Using the functions plugin a user can set a function, and then on running a certain command, that function will be run - Enjoy :D
 
 Commands
 =========
