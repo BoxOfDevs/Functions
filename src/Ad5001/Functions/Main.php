@@ -40,6 +40,11 @@
 				case "function":
 					if(isset($args[0])){
 							switch($args[0]){
+
+								/*
+								Creates a function
+								/function create <function name>
+								*/
 								case "c":
 								case "create":
 								if(count($args) >= 2){
@@ -56,6 +61,11 @@
 									return true;
 								}
 							break;
+
+							/*
+							Adds a command to a function
+							/function addcmd <function name> <command>
+							*/
 							case "ac":
 							case "addc":
 							case "acmd":
@@ -78,6 +88,11 @@
 								return true;
 							}
 							break;
+
+							/*
+							Resets a command from a function
+							/function reset <function name> <command id>
+							*/
 							case "rc":
 							case "resetcmd":
 							if(count($args) >= 3){
@@ -96,6 +111,11 @@
 								}
 							}
 							break;
+
+							/*
+							Removes a command from a function
+							/function removecmd <function name> <command id>
+							*/
 							case "rmc":
 							case "removecmd":
 							if(count($args) >= 3){
@@ -116,6 +136,11 @@
 								}
 							}
 							break;
+
+							/*
+							Reads a function's commands
+							/function read <function name>
+							*/
 							case "read":
 							if(count($args) >= 2){
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
@@ -134,6 +159,11 @@
 								}
 							}
 							break;
+
+							/*
+							Deletes a function
+							/function delete <function name>
+							*/
 							case "delete":
 							case "remove":
 							case "del":
@@ -153,6 +183,11 @@
 								}
 							}
 							break;
+
+							/*
+							Sets the usage of a command
+							/function setdesc <function name> <description>
+							*/
 							case "setdesc":
 							case "description":
 							case "setdescription":
@@ -175,6 +210,11 @@
 								}
 							}
 							break;
+
+							/*
+							Sets the usage of a command
+							/function usage <function name> <usage>
+							*/
 							case "setuse":
 							case "usage":
 							case "setsuage":
@@ -197,6 +237,12 @@
 								}
 							}
 							break;
+
+
+							/*
+							Sets a command by it's id on a function'
+							/function setcmd <function name> <command id> <command>
+							*/
 							case "setc":
 							case "setcmd":
 							case "cmd":
@@ -220,6 +266,11 @@
 								}
 							}
 							break;
+
+							/*
+							Import a function from an exported .func
+							/function import <func file name>
+							*/
 							case "import":
 							case "createfrom":
 							case "cfrom":
@@ -229,23 +280,32 @@
 									$num = 0;
 									$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 									$content = file_get_contents($this->getDataFolder() . $args[1] . ".func");
-									if(substr($content, 0, 5) == "PWD?1" && !isset($args[2])) {
+									if(substr($content, 0, 5) == "PWD?1" && !isset($args[2])) { // Password is required but no password provided
 										$sender->sendMessage("§l§4[Functions]§r§4 This function is encrypted using a password. Please enter the password to import it.");
 										return false;
 									} elseif(substr($content, 0, 5) == "PWD?1" && isset($args[2])) {
 										$this->getLogger()->debug("Encrypting password to decrypt function...");
 										$pwd = str_split(hash("sha512", $args[2]));
-										// Converting sha512 string to a number addable to this.
-										for($i = 0; $i < 128; $i++) {
-											$num += ord($pwd[$i]) * $i;
-										}
+									} else {
+										$pwd = str_split(hash("sha512", "default encryption"));
+									}
+									// Reencrypting to decode
+									for($i = 0; $i < 128; $i++) {
+										$pwd[$i] = ord($pwd[$i]) * $i;
 									}
 									$content = substr($content, 5);
 									$chars = str_split($content);
+									$i = 127;
 									foreach($chars as $key => $char) {
-										$chars[$key] = chr(ord($char) - 23 - $num);
+										$chars[$key] = chr(ord($char) - (($pwd[$i] !== 0) ? $pwd[$i] : 45)); // Encrypting so it's not editable using a text editor.
+										$this->getLogger()->debug($i . " " . $pwd[$i]);
+										$i--;
+										if($i == -1 || $i < -1) {
+											$i = 127;
+										}
 									}
 									$chars = implode("", $chars);
+									$this->getLogger()->debug($chars);
 									$default = @unserialize($chars);
 									if($default == false) {
 										$sender->sendMessage("§l§4[Functions]§r§4 Incorect password. Please retry.");
@@ -265,23 +325,33 @@
 								}
 							}
 							break;
+
+							/*
+							Export a function to a .func
+							/function export <function name> [password]
+							*/
 							case "export":
 							case "expt":
 							if(count($args) >= 2){
 								if(file_exists($this->getDataFolder() . $args[1] . ".func")) $sender->sendMessage("File with name ". $args[1] . ".func already exists. Overwriting....");
 								$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-								$num = 0;
+								$pwd = str_split(hash("sha512", "default encryption"));
 								if(is_array($cfg->get("/".$args[1]))) {
 									if(isset($args[2])) { // Set password to prevent from leaking.
 										$pwd = str_split(hash("sha512", $args[2]));
-										// Converting sha512 string to a number addable to this.
-										for($i = 0; $i < 128; $i++) {
-											$num += ord($pwd[$i]) * $i;
-										}
+									}
+									// Reencrypting the SHA512 string to less bruteforce
+									for($i = 0; $i < 128; $i++) {
+										$pwd[$i] = ord($pwd[$i]) * $i;
 									}
 									$chars = str_split(serialize(array_merge($cfg->get("/".$args[1]), ["name" => $args[1]])));
+									$i = 127;
 									foreach($chars as $key => $char) {
-										$chars[$key] = chr(ord($char) + 23 + $num); // Encrypting so it's not editable using a text editor.
+										$chars[$key] = chr(ord($char) + (($pwd[$i] !== 0) ? $pwd[$i] : 45)); // Encrypting so it's not editable using a text editor.
+										$i--;
+										if($i == -1 || $i < -1) {
+											$i = 127;
+										}
 									}
 									$chars = implode("", $chars);
 									if(isset($args[2])) {
@@ -325,7 +395,6 @@
 			// Executing commands
 				$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 				$cmds = $cfg->get("/" . $command->getName());
-				var_dump($cmds);
 				if(is_array($cmds)){
 						$funcname = $command->getName();
 						if($sender->isPermissionSet("func.use." . $funcname) ? $sender->hasPermission("func.use." . $funcname) : $sender->hasPermission("func.use.default")){
