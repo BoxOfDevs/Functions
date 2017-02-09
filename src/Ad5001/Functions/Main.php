@@ -45,7 +45,7 @@
 								Creates a function
 								/function create <function name>
 								*/
-								case "c":
+								case "S*":
 								case "create":
 								if(count($args) >= 2){
 									$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
@@ -269,7 +269,7 @@
 
 							/*
 							Import a function from an exported .func
-							/function import <func file name>
+							/function import <func file name> [password]
 							*/
 							case "import":
 							case "createfrom":
@@ -280,25 +280,29 @@
 									$num = 0;
 									$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 									$content = file_get_contents($this->getDataFolder() . $args[1] . ".func");
-									if(substr($content, 0, 5) == "PWD?1" && !isset($args[2])) { // Password is required but no password provided
+									if(substr($content, 0, 10) == "1.1.3PWD?1" && !isset($args[2])) { // Password is required but no password provided
 										$sender->sendMessage("§l§4[Functions]§r§4 This function is encrypted using a password. Please enter the password to import it.");
 										return false;
-									} elseif(substr($content, 0, 5) == "PWD?1" && isset($args[2])) {
+									} elseif(substr($content, 0, 10) == "1.1.3PWD?1" && isset($args[2])) {
 										$this->getLogger()->debug("Encrypting password to decrypt function...");
 										$pwd = str_split(hash("sha512", $args[2]));
-									} else {
+									} elseif(substr($content, 0, 10) == "1.1.3PWD?0") {
 										$pwd = str_split(hash("sha512", "default encryption"));
+									} else {
+										$sender->sendMessage("§4§l[Functions]§r§4 Functions cannot decrypt this outdated/corrupted function file.");
+										return true;
 									}
 									// Reencrypting to decode
 									for($i = 0; $i < 128; $i++) {
-										$pwd[$i] = ord($pwd[$i]) * $i;
+										$pwd[$i] = ord($pwd[$i]);
 									}
-									$content = substr($content, 5);
-									$chars = str_split($content);
+
+									$content = substr($content, 10);
+									$chars = str_split($content, 2);
 									$i = 127;
 									foreach($chars as $key => $char) {
-										$chars[$key] = chr(ord($char) - (($pwd[$i] !== 0) ? $pwd[$i] : 45)); // Encrypting so it's not editable using a text editor.
-										$this->getLogger()->debug($i . " " . $pwd[$i]);
+										$chars[$key] = chr(hexdec($char) - $pwd[$i]); // Encrypting so it's not editable using a text editor.
+										$this->getLogger()->debug(hexdec($char) - $pwd[$i] . " Pwd: " . $pwd[$i] . " ANSIIed: " . hexdec($char) . " Return: " . $chars[$key]);
 										$i--;
 										if($i == -1 || $i < -1) {
 											$i = 127;
@@ -306,8 +310,8 @@
 									}
 									$chars = implode("", $chars);
 									$this->getLogger()->debug($chars);
-									$default = @unserialize($chars);
-									if($default == false) {
+									$default = @json_decode($chars, true);
+									if($default == null) {
 										$sender->sendMessage("§l§4[Functions]§r§4 Incorect password. Please retry.");
 										return false;
 									}
@@ -342,12 +346,18 @@
 									}
 									// Reencrypting the SHA512 string to less bruteforce
 									for($i = 0; $i < 128; $i++) {
-										$pwd[$i] = ord($pwd[$i]) * $i;
+										$pwd[$i] = ord($pwd[$i]);
 									}
-									$chars = str_split(serialize(array_merge($cfg->get("/".$args[1]), ["name" => $args[1]])));
+									$chars = str_split(json_encode(array_merge($cfg->get("/".$args[1]), ["name" => $args[1]])));
 									$i = 127;
 									foreach($chars as $key => $char) {
-										$chars[$key] = chr(ord($char) + (($pwd[$i] !== 0) ? $pwd[$i] : 45)); // Encrypting so it's not editable using a text editor.
+										$num = ord($char) + $pwd[$i];
+										$hex = dechex($num);
+										if(strlen($hex) < 2) {
+											$hex = "0" . $hex;
+										}
+										$this->getLogger()->debug(ord($char) + $pwd[$i] . " Pwd: " . $pwd[$i] . " ANSIIed: " . ord($char) . " = " . $char . " Does: " . $hex . " len: " . strlen($hex));
+										$chars[$key] = dechex($num); // Encrypting so it's not editable using a text editor.
 										$i--;
 										if($i == -1 || $i < -1) {
 											$i = 127;
@@ -355,9 +365,9 @@
 									}
 									$chars = implode("", $chars);
 									if(isset($args[2])) {
-										$chars = "PWD?1" . $chars;
+										$chars = "1.1.3PWD?1" . $chars;
 									} else {
-										$chars = "PWD?0" . $chars;
+										$chars = "1.1.3PWD?0" . $chars;
 									}
 									file_put_contents($this->getDataFolder() . $args[1] . ".func", $chars);
 									$sender->sendMessage("§4§l[Functions]§r§4 Function " . $args[1] . " has been succefully exported to " . $args[1] . ".func! You can now share it to any other server" . (isset($args[2]) ? " using password " . $args[2] : "") . ".");
@@ -594,5 +604,62 @@
 						}
 						return true;
 					}
+				}
+
+
+				/*
+				Converts an int to an unicode char.
+				@param     $char    int
+				@return string
+				*/
+				public function from_unicode(int $char) : string {
+					return pack("C*", $char);
+					/*
+					$dex = dechex($char);
+					if(strlen($dex) < 4) {
+						for($i = strlen($dex); $i < 4; $i++) {
+							$dex = "0" . $dex; // Adding 0s if not 4 chars dec. 
+						}
+					}
+					return json_decode('{"t":"\u' . $dex . '"}', true)["t"];
+					*/
+				}
+
+
+				/*
+				Converts an unicode char to an int
+				Taken from http://randomchaos.com/documents/?source=php_and_unicode
+				@param     $char    string
+				@return int
+				*/
+				public function to_unicode(string $str) : int {
+					return unpack("C*", $str)[1];
+					/*
+					$unicode = array();        
+        			$values = array();
+        			$lookingFor = 1;
+        
+        			for ($i = 0; $i < strlen( $str ); $i++ ) {
+            			$thisValue = ord( $str[ $i ] );
+            			if ( $thisValue < 128 ) $unicode[] = $thisValue;
+            			else {
+           		     		if ( count( $values ) == 0 ) $lookingFor = ( $thisValue < 224 ) ? 2 : 3;
+                			$values[] = $thisValue;
+                
+                			if ( count( $values ) == $lookingFor ) {
+           			        	$number = ( $lookingFor == 3 ) ?
+                    	    	( ( $values[0] % 16 ) * 4096 ) + ( ( $values[1] % 64 ) * 64 ) + ( $values[2] % 64 ):
+                    			( ( $values[0] % 32 ) * 64 ) + ( $values[1] % 64 );
+                        
+                    			$unicode[] = $number;
+                    			$values = array();
+                    			$lookingFor = 1;
+            
+							}
+						}
+						
+					}
+					*/
+					// return $unicode;
 				}
 			}
