@@ -526,7 +526,7 @@
 											} elseif(in_array(false, $current) && $state == self::AND) {
 												$current = false;
 												$this->getLogger()->debug($current ? "true" : "false" . $state);
-											} elseif($state == self::OR) {
+											} elseif($state == self::NONE) {
 												$current = $current[0];
 												$this->getLogger()->debug($current ? "true" : "false" . $state);
 											}
