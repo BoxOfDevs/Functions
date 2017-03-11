@@ -1,6 +1,6 @@
 Functions Description
 ======================
-[![Poggit-CI](https://poggit.pmmp.io/ci.badge/BoxOfDevs/Functions/Functions)](https://poggit.pmmp.io/ci/BoxOfDevs/Functions/Functions))
+[![Poggit-CI](https://poggit.pmmp.io/ci.badge/BoxOfDevs/Functions/Functions)](https://poggit.pmmp.io/ci/BoxOfDevs/Functions/Functions)
 
 [Come chat with us on Discord!](https://discord.gg/6RXsK7w)
 
