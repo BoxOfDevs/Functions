@@ -1,8 +1,7 @@
 Functions Description
 ======================
 [![Build Status](http://46.4.105.238:8080/buildStatus/icon?job=Functions)](http://46.4.105.238:8080/job/Functions/)
-[Come chat with us on Discord!](https://discord.gg/6RXsK7w)
-
+<br>
 [<img src="https://discordapp.com/assets/fc0b01fe10a0b8c602fb0106d8189d9b.png" width="162" height= "55">](https://discord.gg/6RXsK7w)
 
 Ever wanted to make your own commands? Well, now you can! Using the functions plugin a user can set a function, and then on running a certain command, that function will be run - Enjoy :D
