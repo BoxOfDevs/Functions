@@ -1,6 +1,6 @@
 <?php
 	namespace Ad5001\Functions;
-	use pocketmine\command\CommandSender;
+	use pocketmine\command\CommandSender
 	use pocketmine\command\Command;
 	use pocketmine\command\ConsoleCommandSender;
 	use pocketmine\event\player\PlayerCommandPreprocessEvent;
