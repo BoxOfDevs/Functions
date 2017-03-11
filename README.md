@@ -1,4 +1,4 @@
-(Functions Description
+Functions Description
 ======================
 [![Build Status](http://46.4.105.238:8080/buildStatus/icon?job=Functions)](http://46.4.105.238:8080/job/Functions/)
 <br>
