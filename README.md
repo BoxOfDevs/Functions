@@ -11,7 +11,7 @@ Head to our [jenkins server](http://46.4.105.238:8080/job/Functions/) and get th
 <br>
 Commands
 =========
-All the commands currently implemented into Functions:
+All the commands currently implemented into Functions: 
 
     - /function create <name of the function>
         Create a function!
