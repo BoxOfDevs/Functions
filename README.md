@@ -1,6 +1,6 @@
 Functions Description
 ======================
-[![Build Status](http://46.4.105.238:8080/buildStatus/icon?job=Functions)](http://46.4.105.238:8080/job/Functions/)
+[![Poggit-CI](https://poggit.pmmp.io/ci.shield/BoxOfDevs/Functions/Functions)](https://poggit.pmmp.io/ci/BoxOfDevs/Functions/Functions)
 <br>
 [<img src="https://discordapp.com/assets/fc0b01fe10a0b8c602fb0106d8189d9b.png" width="162" height= "55">](https://discord.gg/6RXsK7w)
 
