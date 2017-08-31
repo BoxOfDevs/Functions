@@ -6,8 +6,6 @@ Functions Description
 
 Ever wanted to make your own commands? Well, now you can! Using the functions plugin a user can set a function, and then on running a certain command, that function will be run - Enjoy :D
 <br>
-## Download
-Head to our [jenkins server](http://46.4.105.238:8080/job/Functions/) and get the build from last successful artefacts [(permalink to latest phar)](http://46.4.105.238:8080/job/Functions/lastSuccessfulBuild/artifact/Functions.phar). You can also find an archive of all previous versions.
 <br>
 Commands
 =========
