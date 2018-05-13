@@ -4,9 +4,25 @@ Functions Description
 <br>
 [<img src="https://discordapp.com/assets/fc0b01fe10a0b8c602fb0106d8189d9b.png" width="162" height= "55">](https://discord.gg/6RXsK7w)
 
-Ever wanted to make your own commands? Well, now you can! Using the functions plugin a user can set a function, and then on running a certain command, that function will be run - Enjoy :D
+## Ever wanted to make your own commands? Well, now you can! Using the functions plugin a user can set a function, and then on running a certain command, that function will be run - Enjoy :D
 <br>
 <br>
+
+Changelog
+========
+Version 2.0.0: May 13, 2018. Thanks to JackMD!
+
+    - Updated to version 2.0.0 in config
+    - Compatibility with API 3.0.0-ALPHA12 through ALPHA14
+    - Code reformatting
+    - Shorthand commands: /func, for example
+    - Typehints added (ew, but yeah fiiineeeee)
+    - Help message redesign, looking great!
+    - Remove unnecessary return statements
+    - File structure improved
+    - Author name fixed
+    - Minor improvements
+
 Commands
 =========
 All the commands currently implemented into Functions:
@@ -120,17 +136,28 @@ If the password entered is wrong (could not decrypt the function), you will also
 
 Authors
 ========
-All the BoxOfDevs members who contributed to Functions:
+All contributors to Functions:
 
     - Ad5001
     
+    - applqpak
+    
+    - HimbeersaftLP
+    
     - TheDragonRing
     
-    - applqpak
+    - remotevase
     
     - Dog2puppy
     
-    - remotevase
+    - ErkamKahriman
+    
+    - JackMD
+    
+    - TheRoyalBlock (AvgZing)
+    
+    - DarkWav
+    
 Read The License!!!
 ========
 Please make sure you read the license, upon downloading any file of the software, you agree to all its terms. The license may be found [here.] (http://bit.ly/2jikqXv)
