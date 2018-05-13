@@ -1,7 +1,7 @@
 name: Functions
-author: Ad5001
+author: BoxOfDevs Team
 version: 2.0.0
-api: [3.0.0-ALPHA12]
+api: [3.0.0-ALPHA12, 3.0.0-ALPHA13, 3.0.0-ALPHA14]
 main: Ad5001\Functions\Main
 commands: 
   function:
