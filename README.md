@@ -7,6 +7,7 @@ Functions Description
 ## Ever wanted to make your own commands? Well, now you can! Using the functions plugin a user can set a function, and then on running a certain command, that function will be run - Enjoy :D
 <br>
 <br>
+
 Changelog
 ========
 Version 2.0.0: May 13, 2018. Thanks to JackMD!
