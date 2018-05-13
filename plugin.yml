@@ -1,19 +1,20 @@
 name: Functions
 author: Ad5001
-version: "1.2.1"
-api:
-- 2.0.0
-- 3.0.0
+version: 2.0.0
+api: [3.0.0-ALPHA12]
 main: Ad5001\Functions\Main
 commands: 
-    function:
-        description: "Create, manage and remove functions with this command"
-        usage: "/function <sub-command> <function> parameters..."
-        permission: func.command.function
+  function:
+    description: "Create, manage and remove functions with this command"
+    usage: "/function <sub-command> <function> parameters..."
+    aliases: [func]
+    permission: func.command.function
 permissions:
-    func.command.function:
-        default: op
-        description: "Create, manage and remove functions with this command"
-    func.use.default:
-        default: true
-        description: "Defines users permission to use a specific function if permission node func.use.functionname is not set"
+  func.command.function:
+    default: op
+    description: "Create, manage and remove functions with this command"
+  func.use.default:
+    default: true
+    description: "Defines users permission to use a specific function if permission node func.use.functionname is not set"
+
+...
