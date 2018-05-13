@@ -1,6 +1,6 @@
 <?php
 
-namespace Ad5001\Functions;
+namespace BoxOfDevs\Functions;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
