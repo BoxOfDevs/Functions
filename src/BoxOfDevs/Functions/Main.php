@@ -5,7 +5,6 @@ namespace BoxOfDevs\Functions;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
-use pocketmine\command\Loader;
 use pocketmine\command\PluginCommand;
 use pocketmine\event\Listener;
 use pocketmine\Player;
@@ -162,7 +161,7 @@ class Main extends PluginBase implements Listener
 							if (count($args) >= 2) {
 								$cfg = new Config($this->getDataFolder() . "config.yml" , Config::YAML);
 								if (is_array($cfg->get("/" . $args[1]))) {
-									$cfg->remove("/" , $args[1]);
+									$cfg->remove("/" . $args[1]);
 									$cfg->save();
 									$this->reloadConfig();
 									$this->cmds[$args[1]]->unregister($this->getServer()->getCommandMap());
